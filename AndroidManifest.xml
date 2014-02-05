@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.yowatari.machitomo.HomeActivity"
+            android:name="com.yowatari.machitomo.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:configChanges="orientation|screenSize" >

@@ -8,6 +8,13 @@
     <string name="playing">Playing</string>
     <string name="notifications">Notifications</string>
     
+    
+    <string-array name="menu_array">
+        <item>Home</item>
+        <item>Me</item>
+        <item>Friends</item>
+        <item>New Friends</item>
+    </string-array>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
