@@ -98,15 +98,13 @@ public class MainActivity extends FragmentActivity implements DrawerFragment.OnL
 		switch (id) {
 		case 0:
 			// Home
-//			HomeFragment homeFragment = (HomeFragment)getSupportFragmentManager().findFragmentByTag("Home");
-//			if (!homeFragment.isVisible()) {
-//				homeFragment = new HomeFragment();
-//			}
 			HomeFragment homeFragment = new HomeFragment();
 			transaction.replace(R.id.content, homeFragment, "Home");
 			break;
 		case 1:
 			// Me
+			UserFragment meFragment = new UserFragment();
+			transaction.replace(R.id.content, meFragment, "Me");
 			break;
 		case 2:
 			// Friends
