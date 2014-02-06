@@ -1,30 +1,24 @@
 package com.yowatari.machitomo;
 
-import android.app.ActionBar.Tab;
-import android.app.ActionBar.TabListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.TabHost.TabSpec;
 
-public class UserFragment extends Fragment implements TabListener {
+public class UserFragment extends Fragment {
+
+	FragmentTabHost mTabHost;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
 		View view = inflater.inflate(R.layout.user, container, false);
-		return view;
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-
+		
 		FragmentTransaction transaction = getFragmentManager()
 				.beginTransaction();
 
@@ -32,54 +26,56 @@ public class UserFragment extends Fragment implements TabListener {
 		transaction.replace(R.id.profile, pfFragment, "UserProfile");
 		transaction.commit();
 
-		FragmentTabHost mTabHost = (FragmentTabHost) getView().findViewById(
-				R.id.tabhost);
+		mTabHost = (FragmentTabHost) view.findViewById(R.id.tabhost);
 		mTabHost.setup(getActivity(), getChildFragmentManager(),
-				R.id.tabhost_fragment);
-
-		TabSpec actionsTab = mTabHost.newTabSpec("Actions");
-		actionsTab.setIndicator("actions");
-		mTabHost.addTab(actionsTab, TimelineFragment.class, null);
-
-		TabSpec friendsTab = mTabHost.newTabSpec("Friends");
-		friendsTab.setIndicator("friends");
-		mTabHost.addTab(friendsTab, FriendListFragment.class, null);
-
+				R.id.tab_container);
+		
+		mTabHost.addTab(mTabHost.newTabSpec("Actions").setIndicator("actions"),
+				TabRoot.class, null);
+		mTabHost.addTab(mTabHost.newTabSpec("Friends").setIndicator("friends"),
+				TabRoot.class, null);
+		
+		return view;
 	}
 
-	@Override
-	public void onTabReselected(Tab tab,
-			android.app.FragmentTransaction transaction) {
-		// TODO Auto-generated method stub
+	/**
+	 * Tabに入れる親Fragment
+	 * 
+	 * @author noxi
+	 */
+	public static class TabRoot extends Fragment implements OnClickListener {
 
-	}
-
-	@Override
-	public void onTabSelected(Tab tab,
-			FragmentTransaction transaction) {
-		int position = tab.getPosition();
-		transaction = getChildFragmentManager().beginTransaction();
-		switch (position) {
-		case 0:
-			TimelineFragment tlFragment = new TimelineFragment();
-			transaction.replace(R.id.tabincontent, tlFragment);
-			break;
-		case 1:
-			FriendListFragment fFragment = new FriendListFragment();
-			transaction.replace(R.id.tabincontent, fFragment);
-			break;
-
-		default:
-			break;
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			if (container == null) {
+				return null;
+			}
+			return inflater.inflate(R.layout.tab_root, container, false);
 		}
 
+		@Override
+		public void onActivityCreated(Bundle savedInstanceState) {
+			super.onActivityCreated(savedInstanceState);
+			// 初回のみ自動で子を入れる
+			if (savedInstanceState == null) {
+				getChildFragmentManager().beginTransaction()
+						.addToBackStack(null)
+						.add(R.id.fragment_container, createNewChild())
+						.commit();
+			}
+		}
+
+		@Override
+		public void onClick(View v) {
+			getChildFragmentManager().beginTransaction().addToBackStack(null)
+					.replace(R.id.fragment_container, createNewChild())
+					.commit();
+		}
+
+		Fragment createNewChild() {
+			TimelineFragment tlFragment = new TimelineFragment();
+			return tlFragment;
+		}
 	}
-
-	@Override
-	public void onTabUnselected(Tab tab,
-			android.app.FragmentTransaction transaction) {
-		// TODO Auto-generated method stub
-
-	}
-
 }
